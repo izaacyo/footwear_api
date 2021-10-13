@@ -7,10 +7,11 @@ const UserSchema = new mongoose.Schema(
         password: { type: String, required: true },
         isAdmin: {
             type: Boolean,
-            default: false
+            default: false,
         },
+        img: { type: String },
     },
     { timestamps: true }
-)
+);
 
-module.exports = mongoose.model("User", UserSchema)
+module.exports = mongoose.model("User", UserSchema);

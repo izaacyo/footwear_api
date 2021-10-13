@@ -1,32 +1,34 @@
+const User = require("../models/User");
+const {
+    verifyToken,
+    verifyTokenAndAuthorization,
+    verifyTokenAndAdmin,
+} = require("./verifyToken");
+
 const router = require("express").Router();
-const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken")
-const User = require("../models/User")
 
-//UPDATE USER
+//UPDATE
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-
     if (req.body.password) {
-        req.body.password = CryptoJS.AES.encrypt
-            (req.body.password,
-                process.env.PASS_SEC)
-            .toString()
-
+        req.body.password = CryptoJS.AES.encrypt(
+            req.body.password,
+            process.env.PASS_SEC
+        ).toString();
     }
 
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, {
-            $set: req.body
-
-        }, { new: true })
-
-        res.status(200).json(updatedUser)
-
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: req.body,
+            },
+            { new: true }
+        );
+        res.status(200).json(updatedUser);
     } catch (err) {
-        (res.status(500).json(err))
+        res.status(500).json(err);
     }
-
-})
-
+});
 
 //DELETE
 router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
@@ -49,24 +51,22 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
-
-//GET ALL USERS
+//GET ALL USER
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
-    const query = req.query.new
-
+    const query = req.query.new;
     try {
-        const users = query ? await User.find().sort({ _id: -1 }).limit(5) : await User.find();
+        const users = query
+            ? await User.find().sort({ _id: -1 }).limit(5)
+            : await User.find();
         res.status(200).json(users);
     } catch (err) {
         res.status(500).json(err);
     }
 });
 
-
-// GET USER STATS 
+//GET USER STATS
 
 router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
-
     const date = new Date();
     const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 
@@ -75,24 +75,20 @@ router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
             { $match: { createdAt: { $gte: lastYear } } },
             {
                 $project: {
-                    month: { $month: "$createdAt" }
-                }
+                    month: { $month: "$createdAt" },
+                },
             },
             {
-
                 $group: {
                     _id: "$month",
-                    total: { $sum: 1 }
-                }
-            }
-        ])
-
+                    total: { $sum: 1 },
+                },
+            },
+        ]);
         res.status(200).json(data)
     } catch (err) {
-        res.status(500).json(err)
+        res.status(500).json(err);
     }
+});
 
-})
-
-
-module.exports = router
+module.exports = router;
