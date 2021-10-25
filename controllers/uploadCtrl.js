@@ -21,7 +21,7 @@ const uploadCtrl = {
 
                 removeTmp(file.tempFilePath)
 
-                console.log(file)
+                console.log({ result })
 
                 res.json({ url: result.secure_url })
             })
