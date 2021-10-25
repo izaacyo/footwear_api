@@ -36,6 +36,7 @@ app.use("/api/checkout", stripeRoute)
 
 
 app.use('/user', require('./routes/userRouter'))
+app.use('/api', require('./routes/upload'))
 
 
 
