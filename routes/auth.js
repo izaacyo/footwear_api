@@ -55,4 +55,15 @@ router.post("/login", async (req, res) => {
     }
 });
 
+
+// LOGOUT 
+
+router.get("/logout", async (req, res) => {
+    try {
+        res.status(200).json('accessToken', "")
+    } catch (err) {
+        res.status(500).json("cannot logout");
+    }
+});
+
 module.exports = router;

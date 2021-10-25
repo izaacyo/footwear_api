@@ -1,6 +1,4 @@
 const express = require("express");
-const bodyParser = require('body-parser')
-const app = express();
 const mongoose = require("mongoose")
 const dotenv = require("dotenv");
 dotenv.config()
@@ -11,6 +9,8 @@ const cartRoute = require("./routes/cart")
 const orderRoute = require("./routes/order")
 const stripeRoute = require("./routes/stripe")
 const cors = require("cors")
+const cookieParser = require('cookie-parser')
+const fileUpload = require('express-fileupload')
 
 
 mongoose.connect(process.env.MONGO_URL)
@@ -19,9 +19,14 @@ mongoose.connect(process.env.MONGO_URL)
         console.log(err)
     })
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const app = express();
 app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
+app.use(fileUpload({
+    useTempFiles: true
+}))
+
 app.use("/api/auth", authRoute)
 app.use("/api/users", userRoute)
 app.use("/api/products", productRoute)
@@ -33,5 +38,4 @@ app.use("/api/checkout", stripeRoute)
 
 app.listen(5000, () => {
     console.log("Backend server is running!")
-
 })
