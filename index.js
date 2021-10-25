@@ -35,6 +35,9 @@ app.use("/api/orders", orderRoute)
 app.use("/api/checkout", stripeRoute)
 
 
+app.use('/user', require('./routes/userRouter'))
+
+
 
 app.listen(5000, () => {
     console.log("Backend server is running!")
