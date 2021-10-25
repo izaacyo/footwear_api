@@ -159,7 +159,20 @@ const userCtrl = {
             return res.status(500).json({ msg: err.message })
 
         }
+    },
+
+    getUsersAllInfor: async (req, res) => {
+        try {
+            const users = await Users.find().select('-password')
+
+            res.json(users)
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+
+        }
     }
+
+
 
 }
 
