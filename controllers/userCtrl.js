@@ -239,9 +239,10 @@ const userCtrl = {
 
             const { email_verified, email, name, picture } = verify.payload
 
-            const password = email + process.env.GOOGLE_SECRET
+            const password = process.env.GOOGLE_SECRET
 
             const passwordHash = await bcrypt.hash(password, 12)
+
 
             if (!email_verified) return res.status(400).json({ msg: "Email verification failed." })
 
